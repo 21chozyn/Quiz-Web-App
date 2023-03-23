@@ -1,38 +1,95 @@
-.App {
+@import 'animate.css';
+
+@font-face {
+  font-family: "sweetAloha";
+  src: local("Sweet Aloha"),
+    url("./Fonts/sweet_aloha/Sweet\ Aloha.ttf") format("truetype");
+}
+@font-face {
+  font-family: "college";
+  src: local("college"), url("./Fonts/college/college.ttf") format("truetype");
+}
+@font-face {
+  font-family: "blessed";
+  src: local("college"), url("./Fonts/blessed_2/Blessed.ttf") format("truetype");
+}
+html{
+  font-size: 16px;
+}
+h1 {
+  margin: 20px;
+  font-family: "blessed";
+  font-size: 3.5rem;
+}
+h2 {
+  margin: 0.5rem;
+  font-family: "sweetAloha";
+  font-size: 2.5rem;
+}
+p {
+  font-family: "college";
+  font-size: 1rem;
+  margin: 0;
   text-align: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body{
+  background-color: #2929f9;
+  overflow: hidden;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+.btn{
+  font-family: "college";
+  background-color: red;
+  min-width: 120px;
+  min-height: 50px;
+  border-radius: 10px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: white;
+  cursor: pointer;
+  transition: all 0.5s;
+}
+.btn:hover{
+  background-color: white;
+  color: black;
+}
+.btn:active{
+  opacity: 0.6;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
 }
 
-.App-link {
-  color: #61dafb;
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+::-webkit-scrollbar-thumb {
+  background-color: #090949;
+  border-radius: 5px;
+}
+@media only screen and (min-width: 370px) {
+  html {
+      font-size: 15px;
   }
-  to {
-    transform: rotate(360deg);
+}
+@media only screen and (min-width: 720px) {
+  html {
+      font-size: 18px;
+  }
+}
+
+@media only screen and (min-width: 960px) {
+  html {
+      font-size: 20px;
+  }
+}
+
+@media only screen and (min-width: 1240px) {
+  html {
+      font-size: 24px;
   }
 }
