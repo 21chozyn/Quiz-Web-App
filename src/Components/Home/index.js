@@ -1,9 +1,10 @@
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { act } from "react-dom/test-utils";
 import Category from "../Category";
 import RulesPopup from "../RulesPopup";
 import "./index.scss";
 import Popup from "reactjs-popup";
+import axios from "axios";
 // import 'reactjs-popup/dist/index.css';
 
 const initialCategories = [
@@ -21,10 +22,16 @@ const initialCategories = [
 
 const Home = () => {
   const [categories, removeCategory] = useReducer(reducer, initialCategories);
-  const [difficulty, setDifficulty] = useState("none");
+  const [difficulty, setDifficulty] = useState("medium");
   const [openPopup, setOpenPopup] = useState(false);
   const [categoryContainerClass, setCategoryContainerClass] =
     useState("category-container");
+  const [quizQuestions, setQuizQuestions] = useState("");
+  const [numberOfQuestions, setNumberOfQuestion] = useState(10);
+  const client = axios.create({
+    baseURL: "https://the-trivia-api.com/api/questions",
+  });
+
   const selectDifficulty = (e) => {
     const levels = document.getElementsByClassName("difficulty");
     Array.prototype.forEach.call(levels, function (level) {
@@ -43,6 +50,27 @@ const Home = () => {
       setDifficulty("hard");
     }
   };
+
+  function fetchQuestions() {
+    const regex1 = / /g;
+    const regex2 = /&/g;
+    var formatedCategories = "";
+    categories.forEach((category) => {
+      category.selected &&
+        (() => {
+          formatedCategories += category.name.toLowerCase().replace(regex1, "_").replace(regex2, "and");
+          formatedCategories += ",";
+        })();
+    });
+    formatedCategories = formatedCategories.slice(0, -1);
+    client
+      .get(
+        `?categories=${formatedCategories}&limit=${numberOfQuestions}&difficulty=${difficulty}`
+      )
+      .then((response) => {
+        setQuizQuestions(response.data);
+      });
+  }
   function reducer(state, action) {
     var currCategories = state;
     switch (action.type) {
@@ -79,6 +107,7 @@ const Home = () => {
     removeCategory({ type: "reset", id: null });
   };
   const handleStartQuiz = () => {
+    fetchQuestions();
     setOpenPopup((o) => !o);
   };
   const closeModal = () => setOpenPopup(false);
