@@ -1,7 +1,10 @@
 import React, { useReducer, useState } from "react";
 import { act } from "react-dom/test-utils";
 import Category from "../Category";
+import RulesPopup from "../RulesPopup";
 import "./index.scss";
+import Popup from "reactjs-popup";
+// import 'reactjs-popup/dist/index.css';
 
 const initialCategories = [
   { name: "Arts & Literature", selected: true, id: 1 },
@@ -16,32 +19,10 @@ const initialCategories = [
   { name: "Sport & Leisure", selected: true, id: 10 },
 ];
 
-const reducer = (state, action) => {
-  var currCategories = state;
-  switch (action.type) {
-    case "remove":
-      console.log("remove");
-      state.forEach((category) => {
-        if (category.id === action.id) {
-          currCategories[action.id - 1] = { ...category, selected: false };
-          console.log(currCategories);
-        }
-      });
-      return currCategories;
-    case "reset":
-      console.log("reset");
-
-      state.forEach((category, index) => {
-        currCategories[index] = { ...category, selected: true };
-        console.log(currCategories);
-      });
-      return currCategories;
-  }
-};
-
 const Home = () => {
   const [categories, removeCategory] = useReducer(reducer, initialCategories);
   const [difficulty, setDifficulty] = useState("none");
+  const [openPopup, setOpenPopup] = useState(false);
   const [categoryContainerClass, setCategoryContainerClass] =
     useState("category-container");
   const selectDifficulty = (e) => {
@@ -97,51 +78,58 @@ const Home = () => {
   const handleReset = () => {
     removeCategory({ type: "reset", id: null });
   };
-  const handleStartQuiz =()=>{
-    
-  }
+  const handleStartQuiz = () => {
+    setOpenPopup((o) => !o);
+  };
+  const closeModal = () => setOpenPopup(false);
   return (
-    <div className="home">
-      <h1>Quiz App</h1>
-      <section>
-        <div className="section _1">
-          <h2 className="title">Select Category</h2>
-          <div className="btn reset-category-selection" onClick={handleReset}>
-            Reset
+    <>
+      <div className="home">
+        <h1>Quiz App</h1>
+        <section>
+          <div className="section _1">
+            <h2 className="title">Select Category</h2>
+            <div className="btn reset-category-selection" onClick={handleReset}>
+              Reset
+            </div>
+            <div className={categoryContainerClass}>
+              {categories.map((category) => {
+                if (category.selected === true) {
+                  return (
+                    <Category
+                      key={category.id}
+                      name={category.name}
+                      handleClose={handleClose}
+                      id={category.id}
+                    />
+                  );
+                }
+              })}
+            </div>
           </div>
-          <div className={categoryContainerClass}>
-            {categories.map((category) => {
-              if (category.selected === true) {
-                return (
-                  <Category
-                    key={category.id}
-                    name={category.name}
-                    handleClose={handleClose}
-                    id={category.id}
-                  />
-                );
-              }
-            })}
+          <div className="section _2">
+            <h2 className="title">Select Difficulty</h2>
+            <div className="difficulty-container">
+              <div className="difficulty _1" onClick={selectDifficulty}>
+                Easy
+              </div>
+              <div className="difficulty _2" onClick={selectDifficulty}>
+                Medium
+              </div>
+              <div className="difficulty _3" onClick={selectDifficulty}>
+                Difficult
+              </div>
+            </div>
           </div>
+        </section>
+        <div className="btn startquiz" onClick={handleStartQuiz}>
+          Start Quiz
         </div>
-        <div className="section _2">
-          <h2 className="title">Select Difficulty</h2>
-          <div className="difficulty-container">
-            <div className="difficulty _1" onClick={selectDifficulty}>
-              Easy
-            </div>
-            <div className="difficulty _2" onClick={selectDifficulty}>
-              Medium
-            </div>
-            <div className="difficulty _3" onClick={selectDifficulty}>
-              Difficult
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div className="btn startquiz" onClick={handleStartQuiz}>Start Quiz</div>
-    </div>
+        <Popup open={openPopup} closeOnDocumentClick onClose={closeModal}>
+          <RulesPopup />
+        </Popup>
+      </div>
+    </>
   );
 };
 
