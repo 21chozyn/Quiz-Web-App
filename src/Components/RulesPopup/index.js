@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import "./index.scss";
 
 const rules = [
@@ -13,7 +14,15 @@ const RulesPopup = () => {
   return (
     <div className="popup rules">
       <ul>{spanRules}</ul>
-      
+      <NavLink
+          exact="true"
+          activeclassname="active"
+          to="/quiz"
+          className="team-link"
+          
+        >
+          start
+        </NavLink>
     </div>
   );
 };

@@ -1,0 +1,47 @@
+.timer-container {
+  //   background-color: white;
+  width: 150px;
+  height: 150px;
+  .base-timer {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    .base-timer__svg {
+      transform: scaleX(-1);
+      .base-timer__circle {
+        fill: none;
+        stroke: none;
+        .base-timer__path-elapsed {
+          stroke-width: 9%;
+          stroke: grey;
+        }
+        .base-timer__path-remaining {
+          stroke-width: 7%;
+
+          stroke-linecap: round;
+
+          transform: rotate(90deg);
+          transform-origin: center;
+          transition: 3s stroke;
+          transition: 1s linear all;
+
+
+        }
+      }
+    }
+  }
+  .base-timer__label {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "college";
+    font-size: 2rem;    
+  }
+  .bounceAnimation{
+    animation: heartBeat .8s;
+  }
+}
