@@ -1,7 +1,9 @@
 .timer-container {
   //   background-color: white;
-  width: 150px;
-  height: 150px;
+  position: relative;
+  width: 75px;
+  height: 75px;
+justify-self: end;
   .base-timer {
     position: relative;
     height: 100%;
@@ -39,7 +41,7 @@
     align-items: center;
     justify-content: center;
     font-family: "college";
-    font-size: 2rem;    
+    font-size: 1.4rem;    
   }
   .bounceAnimation{
     animation: heartBeat .8s;

@@ -1,0 +1,97 @@
+.quiz-container {
+  position: relative;
+  background-color: aqua;
+  width: 320px;
+  height: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 30px;
+  display: block;
+  border-radius: 5px;
+  .top-section {
+    border-radius: 5px 5px 0 0;
+    position: relative;
+    display: grid;
+    align-items: center;
+    grid-auto-flow: column;
+    height: 80px;
+    background-color: aquamarine;
+    width: 100%;
+
+    p {
+      font-family: "college";
+      font-size: 16px;
+      margin: 0;
+      padding: 5px;
+      max-width: 200px;
+      text-align: left;
+    }
+  }
+  .quiz-section {
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    .answer-btn {
+      font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+      font-size: 14px;
+      font-weight: lighter;
+      background-color: white;
+      padding: 0 5px;
+      margin: 5px 0;
+      width: 95%;
+      min-height: 50px;
+      border-radius: 30px;
+      display: grid;
+      box-sizing: border-box;
+      // white-space: nowrap;
+      grid-template-columns: 1fr 6fr 1fr;
+      align-items: center;
+      justify-content: center;
+      color: black;
+      cursor: pointer;
+      transition: all 0.5s;
+      .letter-container{
+        // box-sizing: border-box;
+        display: flex;
+        background-color: gray;
+        width: 30px;
+        aspect-ratio: 1/1;
+        border-radius: 50%;
+        text-align: center;
+        justify-content: center;
+        align-self: center;
+        font-size: 23px;
+      }
+      svg{
+        display: none;
+      }
+    }
+    .answer-btn:hover {
+      opacity: 0.8;
+    }
+    .selected-wrong {
+      border: 2px solid red;
+      justify-content: space-between;
+      animation: shakeX .3s;
+
+      svg{
+        display: inherit;
+        font-size: 30px;
+        color: red;
+
+      }
+    }
+    .selected-correct {
+      border: 2px solid green;
+      justify-content: space-between;
+      svg{
+        display: inherit;
+        font-size: 30px;
+        color: green;
+        animation: bounceInRight .3s;
+        
+      }
+    }
+  }
+}

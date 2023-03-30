@@ -21,7 +21,7 @@ const RulesPopup = () => {
           className="team-link"
           
         >
-          start
+          Got It
         </NavLink>
     </div>
   );

@@ -20,9 +20,19 @@ const Timer = ({ initialTime = 25 }) => {
   const ringRef = useRef();
   const [dashArrayValue, setDashArrayValue] = useState(283);
   const [ringColor, setRingColor] = useState("amber");
-  const [labelClassname, setLabelClass]= useState("base-timer__label")
+  const [labelClassname, setLabelClass] = useState("base-timer__label");
 
-  function startTimer() {
+  // function startTimer() {
+  //   setTimerIntervalId(
+  //     setInterval(() => {
+  //       // I have no idea why i have to have setTimePassed but if we remove it we get unexpected behaviour
+  //       setTimeLeft((prev) => prev - 1);
+  //       setTimePassed((ellapsedTime) => ellapsedTime + 1);
+  //     }, 1000)
+  //   );
+  // }
+  useEffect(() => {
+    console.log("called");
     setTimerIntervalId(
       setInterval(() => {
         // I have no idea why i have to have setTimePassed but if we remove it we get unexpected behaviour
@@ -30,14 +40,16 @@ const Timer = ({ initialTime = 25 }) => {
         setTimePassed((ellapsedTime) => ellapsedTime + 1);
       }, 1000)
     );
-  }
 
-  useEffect(()=>{
+    return stopTimer();
+  }, []);
+
+  useEffect(() => {
     setLabelClass("base-timer__label bounceAnimation");
-    setInterval(()=>{
+    setInterval(() => {
       setLabelClass("base-timer__label");
-    },1200)
-  },[ringColor])
+    }, 1200);
+  }, [ringColor]);
 
   useEffect(() => {
     const dashArrayVal = (timeLeft / initialTime) * 283;
@@ -45,29 +57,28 @@ const Timer = ({ initialTime = 25 }) => {
       setDashArrayValue(dashArrayVal);
     } else if (timeLeft === 0) {
       setDashArrayValue(dashArrayVal);
-     pauseTimer();
+      stopTimer();
     } else {
-      pauseTimer();
+      stopTimer();
     }
-    if (dashArrayVal>140) {
+    if (dashArrayVal > 140) {
       setRingColor("green");
-    }else if(dashArrayVal > 70){
-      setRingColor("orange")
+    } else if (dashArrayVal > 70) {
+      setRingColor("orange");
+    } else {
+      setRingColor("red");
     }
-    else{
-      setRingColor("red")
-    }
-  }, [timeLeft,initialTime]);
+  }, [timeLeft, initialTime]);
 
-  function pauseTimer() {
+  function stopTimer() {
+    setLabelClass("base-timer__label bounceAnimation");
     clearInterval(timerIntervalId);
   }
-
 
   return (
     <>
       <div className="timer-container">
-        <div class="base-timer">
+        <div className="base-timer">
           <svg
             className="base-timer__svg"
             viewBox="0 0 100 100"
@@ -83,7 +94,7 @@ const Timer = ({ initialTime = 25 }) => {
               <path
                 ref={ringRef}
                 id="base-timer-path-remaining"
-                stroke-dasharray="283"
+                strokeDasharray="283"
                 className={`base-timer__path-remaining ${ringColor}`}
                 style={{
                   stroke: ringColor,
