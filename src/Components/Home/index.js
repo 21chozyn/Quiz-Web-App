@@ -158,14 +158,7 @@ const Home = () => {
             </div>
           </div>
         </section>
-        <NavLink
-          exact="true"
-          activeclassname="active"
-          to="/quiz"
-          className="team-link"
-        >
-          start
-        </NavLink>
+        
         <div className="btn startquiz" onClick={handleStartQuiz}>
           Start Quiz
         </div>

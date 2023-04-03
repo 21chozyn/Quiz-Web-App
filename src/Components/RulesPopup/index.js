@@ -17,7 +17,7 @@ const RulesPopup = () => {
       <NavLink
           exact="true"
           activeclassname="active"
-          to="/quiz"
+          to="/quiz/0"
           className="team-link"
           
         >

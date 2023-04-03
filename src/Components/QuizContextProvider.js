@@ -3,7 +3,6 @@ import React, { createContext, useState, useContext } from "react";
 const QuizContext = createContext();
 export const useQuiz = () => useContext(QuizContext);
 
-
 const quiz_data = [
   {
     category: "Film & TV",
@@ -77,13 +76,15 @@ const quiz_data = [
 ];
 
 export default function QuizContextProvider({ children }) {
-
-  const [quizData, setQuizData] = useState(quiz_data)
+  const [quizData, setQuizData] = useState(quiz_data);
+  const [curQuestion, setCurQuestion] = useState(1);
   return (
     <QuizContext.Provider
       value={{
         quizData,
-        setQuizData
+        setQuizData,
+        curQuestion,
+        setCurQuestion,
       }}
     >
       {children}

@@ -13,8 +13,8 @@ function formatTimeLeft(time) {
   return `${minutes}:${seconds}`;
 }
 
-const Timer = ({ initialTime = 25 }) => {
-  const [timeLeft, setTimeLeft] = useState(initialTime);
+const Timer = ({ time = 25, timeUpCallback, id }) => {
+  const [timeLeft, setTimeLeft] = useState(time);
   const [timePassed, setTimePassed] = useState(0);
   const [timerIntervalId, setTimerIntervalId] = useState(null);
   const ringRef = useRef();
@@ -22,17 +22,13 @@ const Timer = ({ initialTime = 25 }) => {
   const [ringColor, setRingColor] = useState("amber");
   const [labelClassname, setLabelClass] = useState("base-timer__label");
 
-  // function startTimer() {
-  //   setTimerIntervalId(
-  //     setInterval(() => {
-  //       // I have no idea why i have to have setTimePassed but if we remove it we get unexpected behaviour
-  //       setTimeLeft((prev) => prev - 1);
-  //       setTimePassed((ellapsedTime) => ellapsedTime + 1);
-  //     }, 1000)
-  //   );
-  // }
   useEffect(() => {
-    console.log("called");
+    if (timeLeft===0){
+      setTimeLeft(time)
+      startTimer()
+    }
+  }, [id]);
+  function startTimer() {
     setTimerIntervalId(
       setInterval(() => {
         // I have no idea why i have to have setTimePassed but if we remove it we get unexpected behaviour
@@ -40,6 +36,9 @@ const Timer = ({ initialTime = 25 }) => {
         setTimePassed((ellapsedTime) => ellapsedTime + 1);
       }, 1000)
     );
+  }
+  useEffect(() => {
+    startTimer();
 
     return stopTimer();
   }, []);
@@ -52,7 +51,7 @@ const Timer = ({ initialTime = 25 }) => {
   }, [ringColor]);
 
   useEffect(() => {
-    const dashArrayVal = (timeLeft / initialTime) * 283;
+    const dashArrayVal = (timeLeft / time) * 283;
     if (timeLeft > 0) {
       setDashArrayValue(dashArrayVal);
     } else if (timeLeft === 0) {
@@ -68,16 +67,17 @@ const Timer = ({ initialTime = 25 }) => {
     } else {
       setRingColor("red");
     }
-  }, [timeLeft, initialTime]);
+  }, [timeLeft, time]);
 
   function stopTimer() {
     setLabelClass("base-timer__label bounceAnimation");
     clearInterval(timerIntervalId);
+    timeUpCallback();
   }
 
   return (
     <>
-      <div className="timer-container">
+      <div className={`timer-container ${id}`}>
         <div className="base-timer">
           <svg
             className="base-timer__svg"
