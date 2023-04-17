@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useQuiz } from "../QuizContextProvider";
-import Timer from "../Timer";
 import "./index.scss";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import MyTimer from "../Mytimer";
 
 const choiceletters = ["A", "B", "C", "D"];
 const initialClassNames = [
@@ -19,7 +19,9 @@ const Quiz = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { quizData, setQuizData } = useQuiz();
+  const { quizData, setQuizData, curQuestion, setCurQuestion,  hasQuizEnded,
+    setHasQuizEnded,
+    setStopTheTimer,} = useQuiz();
 
   const [answerClassName, setAnswerClassName] = useState(initialClassNames);
   const [intervalID, setIntervalId] = useState(null);
@@ -33,18 +35,26 @@ const Quiz = () => {
 
   const toNextQuestion = () => {
     if (id < quizData.length - 1) {
-      const intervalId = setInterval(() => {
+      const intervalId = setTimeout(() => {
+        console.log(`navigate to /quiz/${+id + 1}` )
         navigate(`/quiz/${+id + 1}`);
+        setCurQuestion(id);
       }, 1200);
       setIntervalId(intervalId);
     } else {
       console.log("quiz complete");
+      setHasQuizEnded(true)
     }
   };
   useEffect(() => {
-    console.log(intervalID)
+    console.log(intervalID);
     clearInterval(intervalID);
     setAnswerClassName(initialClassNames);
+    setCurQuestions(
+      [...quizData[id].incorrectAnswers, quizData[id].correctAnswer].sort(
+        () => Math.random() - 0.5
+      )
+    );
   }, [id]);
 
   const handleAnswerClick = (index) => {
@@ -59,6 +69,7 @@ const Quiz = () => {
     toNextQuestion();
   };
   const timeUp = () => {
+
     toNextQuestion();
   };
   return (
@@ -68,11 +79,7 @@ const Quiz = () => {
           Category: {quizData[id].category} <br /> <br /> Tags:{" "}
           {quizData[id].tags.join(" ,")}
         </p>
-        <Timer
-          time={15}
-          timeUpCallback={timeUp}
-          id={id}
-        ></Timer>
+        <MyTimer time={30} expiryTimeStamp={()=>{const time = new Date; time.setSeconds(time.getSeconds()+30); return time}} ></MyTimer>
       </div>
       <div className="quiz-section">
         <h3>

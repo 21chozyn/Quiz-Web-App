@@ -1,5 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import "./index.scss";
+import { useQuiz } from "../QuizContextProvider";
 
 function formatTimeLeft(time) {
   const minutes = Math.floor(time / 60);
@@ -22,10 +30,11 @@ const Timer = ({ time = 25, timeUpCallback, id }) => {
   const [ringColor, setRingColor] = useState("amber");
   const [labelClassname, setLabelClass] = useState("base-timer__label");
 
+  const { hasQuizEnded } = useQuiz();
+
   useEffect(() => {
-    if (timeLeft===0){
-      setTimeLeft(time)
-      startTimer()
+    if (time !== timeLeft) {
+      restartTimer();
     }
   }, [id]);
   function startTimer() {
@@ -39,13 +48,12 @@ const Timer = ({ time = 25, timeUpCallback, id }) => {
   }
   useEffect(() => {
     startTimer();
-
-    return stopTimer();
+    return restartTimer();
   }, []);
 
   useEffect(() => {
     setLabelClass("base-timer__label bounceAnimation");
-    setInterval(() => {
+    setTimeout(() => {
       setLabelClass("base-timer__label");
     }, 1200);
   }, [ringColor]);
@@ -56,9 +64,9 @@ const Timer = ({ time = 25, timeUpCallback, id }) => {
       setDashArrayValue(dashArrayVal);
     } else if (timeLeft === 0) {
       setDashArrayValue(dashArrayVal);
-      stopTimer();
+      restartTimer();
     } else {
-      stopTimer();
+      restartTimer();
     }
     if (dashArrayVal > 140) {
       setRingColor("green");
@@ -69,11 +77,31 @@ const Timer = ({ time = 25, timeUpCallback, id }) => {
     }
   }, [timeLeft, time]);
 
-  function stopTimer() {
-    setLabelClass("base-timer__label bounceAnimation");
-    clearInterval(timerIntervalId);
-    timeUpCallback();
+  function restartTimer() {
+    if (timerIntervalId != null) {
+      if (hasQuizEnded) {
+        setLabelClass("base-timer__label bounceAnimation");
+        clearInterval(timerIntervalId);
+        timeUpCallback();
+      } else {
+        setLabelClass("base-timer__label bounceAnimation");
+        clearInterval(timerIntervalId);
+        setTimeLeft(time);
+        timeUpCallback();
+        setTimeout(() => {
+          startTimer();
+        }, 500);
+      }
+    }
   }
+  useEffect(()=>{
+    if (hasQuizEnded) {
+      console.log("useeffect ran")
+      setLabelClass("base-timer__label bounceAnimation");
+      clearInterval(timerIntervalId);
+      timeUpCallback();
+    }
+  },[hasQuizEnded])
 
   return (
     <>
@@ -113,12 +141,12 @@ const Timer = ({ time = 25, timeUpCallback, id }) => {
           <span className={labelClassname}>{formatTimeLeft(timeLeft)}</span>
         </div>
       </div>
-      {/* <div className="btn" onClick={startTimer}>
+      <div className="btn" onClick={startTimer}>
         start
       </div>
-      <div className="btn" onClick={pauseTimer}>
+      <div className="btn" onClick={restartTimer}>
         stop
-      </div> */}
+      </div>
     </>
   );
 };
