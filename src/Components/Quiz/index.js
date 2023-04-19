@@ -15,13 +15,22 @@ const initialClassNames = [
   "answer-btn",
   "answer-btn",
 ];
+const correctMark = 10;
 const Quiz = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { quizData, setQuizData, curQuestion, setCurQuestion,  hasQuizEnded,
+  const {
+    quizData,
+    setQuizData,
+    curQuestion,
+    setCurQuestion,
+    hasQuizEnded,
     setHasQuizEnded,
-    setStopTheTimer,} = useQuiz();
+    setStopTheTimer,
+    userPoints,
+    setUserPoints,
+  } = useQuiz();
 
   const [answerClassName, setAnswerClassName] = useState(initialClassNames);
   const [intervalID, setIntervalId] = useState(null);
@@ -36,14 +45,14 @@ const Quiz = () => {
   const toNextQuestion = () => {
     if (id < quizData.length - 1) {
       const intervalId = setTimeout(() => {
-        console.log(`navigate to /quiz/${+id + 1}` )
+        console.log(`navigate to /quiz/${+id + 1}`);
         navigate(`/quiz/${+id + 1}`);
         setCurQuestion(id);
       }, 1200);
       setIntervalId(intervalId);
     } else {
       console.log("quiz complete");
-      setHasQuizEnded(true)
+      setHasQuizEnded(true);
     }
   };
   useEffect(() => {
@@ -63,13 +72,18 @@ const Quiz = () => {
       modifiedList[index] = value;
       return modifiedList;
     }
-    curQuestions[index] === quizData[id].correctAnswer
-      ? setAnswerClassName(modifyClassNameList("answer-btn selected-correct"))
-      : setAnswerClassName(modifyClassNameList("answer-btn selected-wrong"));
+    if (curQuestions[index] === quizData[id].correctAnswer) {
+      setAnswerClassName(modifyClassNameList("answer-btn selected-correct"));
+      setUserPoints(userPoints + correctMark);
+    } else {
+      setAnswerClassName(modifyClassNameList("answer-btn selected-wrong"));
+    }
+    // curQuestions[index] === quizData[id].correctAnswer
+    //   ? setAnswerClassName(modifyClassNameList("answer-btn selected-correct")); setUserPoints((prev)=>{prev = prev+ correctMark})
+    //   : setAnswerClassName(modifyClassNameList("answer-btn selected-wrong"));
     toNextQuestion();
   };
   const timeUp = () => {
-
     toNextQuestion();
   };
   return (
@@ -79,7 +93,16 @@ const Quiz = () => {
           Category: {quizData[id].category} <br /> <br /> Tags:{" "}
           {quizData[id].tags.join(" ,")}
         </p>
-        <MyTimer time={30} expiryTimeStamp={()=>{const time = new Date; time.setSeconds(time.getSeconds()+30); return time}} ></MyTimer>
+        <MyTimer
+          onTimeUpCallback={timeUp}
+          id={id}
+          time={30}
+          expiryTimeStamp={() => {
+            const time = new Date();
+            time.setSeconds(time.getSeconds() + 30);
+            return time;
+          }}
+        ></MyTimer>
       </div>
       <div className="quiz-section">
         <h3>

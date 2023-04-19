@@ -7,7 +7,7 @@ function milliseconds(seconds, minutes = 0) {
   return minutes * 60 + seconds;
 }
 
-const MyTimer = ({expiryTimestamp, time = 30}) => {
+const MyTimer = ({expiryTimestamp, time = 30,id, onTimeUpCallback}) => {
   const [ringColor, setRingColor] = useState("amber");
   const [dashArrayValue, setDashArrayValue] = useState(283);
   const [labelClassname, setLabelClass] = useState("base-timer__label");
@@ -22,7 +22,7 @@ const MyTimer = ({expiryTimestamp, time = 30}) => {
     pause,
     resume,
     restart,
-  } = useTimer({ expiryTimestamp, onExpire: () => console.warn('onExpire called') });
+  } = useTimer({ expiryTimestamp, onExpire: onTimeUpCallback, autoStart: true});
   const restartTimer = () => {
     const timE = new Date();
     timE.setSeconds(timE.getSeconds() + time);
@@ -31,7 +31,11 @@ const MyTimer = ({expiryTimestamp, time = 30}) => {
   useEffect(() => {
     setTimeLeft(milliseconds(seconds, minutes));
   }, [seconds]);
-
+useEffect(()=>{
+  const timE = new Date();
+        timE.setSeconds(timE.getSeconds() + time);
+        restart(timE)
+},[id])
   useEffect(() => {
     const dashArrayVal = (timeLeft / time) * 283;
     if (timeLeft > 0) {

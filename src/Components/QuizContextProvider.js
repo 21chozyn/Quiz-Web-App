@@ -79,6 +79,7 @@ export default function QuizContextProvider({ children }) {
   const [quizData, setQuizData] = useState(quiz_data);
   const [curQuestion, setCurQuestion] = useState(0);
   const [hasQuizEnded, setHasQuizEnded] = useState(false);
+  const [userPoints,setUserPoints] = useState(0);
   return (
     <QuizContext.Provider
       value={{
@@ -88,6 +89,8 @@ export default function QuizContextProvider({ children }) {
         setCurQuestion,
         hasQuizEnded,
         setHasQuizEnded,
+        userPoints,
+        setUserPoints,
       }}
     >
       {children}
